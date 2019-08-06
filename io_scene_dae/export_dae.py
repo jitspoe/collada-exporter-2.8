@@ -415,7 +415,8 @@ class DaeExporter:
                 
                 if(self.config["use_exclude_armature_modifier"]):
                     armature_modifiers = [i for i in node.modifiers if i.type == "ARMATURE"]
-                    armature_modifier = armature_modifiers[0]#node.modifiers.get("Armature")
+                    if len(armature_modifiers) > 0:
+                        armature_modifier = armature_modifiers[0]
 
                 if(armature_modifier):  
                     # the armature modifier must be disabled too
@@ -539,7 +540,8 @@ class DaeExporter:
         
         if(self.config["use_exclude_armature_modifier"]):
             armature_modifiers = [i for i in node.modifiers if i.type == "ARMATURE"]
-            armature_modifier = armature_modifiers[0]#node.modifiers.get("Armature")
+            if len(armature_modifiers) > 0:
+                armature_modifier = armature_modifiers[0]
 
         # Set armature in rest pose
         if(armature_modifier):  
@@ -1998,9 +2000,8 @@ class DaeExporter:
         return self
 
     def __exit__(self, *exc):
-        for mesh in self.temp_meshes:
-            bpy.data.meshes.remove(mesh)
-
+        for obj in self.scene.objects:
+            obj.to_mesh_clear()
 
 def save(operator, context, filepath="", use_selection=False, **kwargs):
     with DaeExporter(filepath, kwargs, operator) as exp:
