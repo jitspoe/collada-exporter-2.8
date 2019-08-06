@@ -225,6 +225,7 @@ class DaeExporter:
         material_id = self.material_cache.get(material)
         if material_id:
             return material_id
+        double_sided_hint = not material.use_backface_culling
 
         fxid = self.new_id("fx")
         self.writel(S_FX, 1, "<effect id=\"{}\" name=\"{}-fx\">".format(
@@ -557,7 +558,7 @@ class DaeExporter:
         if (custom_name is not None and custom_name != ""):
             name_to_use = custom_name
 
-        mesh = node.to_mesh(bpy.context.evaluated_depsgraph_get(), apply_modifiers, calc_undeformed=False) 
+        mesh = node.to_mesh(preserve_all_data_layers=False, depsgraph=bpy.context.evaluated_depsgraph_get())
         # 2.8 update: warning, Blender does not support anymore the "RENDER" argument to apply modifier
         # with render state, only current state
         
@@ -626,8 +627,7 @@ class DaeExporter:
                     mat = None
                 
                 if (mat is not None):               
-                    materials[f.material_index] = self.export_material(
-                        mat, mesh.show_double_sided)
+                    materials[f.material_index] = self.export_material(mat)
                 else:
                     materials[f.material_index] = None
 
