@@ -581,8 +581,7 @@ class DaeExporter:
             bm.to_mesh(mesh)
             bm.free()
 
-        #mesh.update(calc_tessface=True)# 2.79
-        mesh.update(calc_edges=False, calc_edges_loose=False, calc_loop_triangles=True)# 2.80
+        mesh.update(calc_edges=False, calc_edges_loose=False)
         vertices = []
         vertex_map = {}
         surface_indices = {}
